@@ -1,0 +1,18 @@
+<div class="card">
+
+  <!-- Tips -->
+  <p>📸 Tips...</p>
+
+  <!-- File input -->
+  <input type="file" ...>
+
+  <!-- Preview -->
+  <img id="preview">
+
+  <!-- Detect button -->
+  <button>Detect Disease</button>
+
+  <!-- Result -->
+  <div id="result"></div>
+
+</div>

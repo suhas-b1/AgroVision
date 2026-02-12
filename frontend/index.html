@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AgroVision</title>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e8f5f2;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 450px;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    input, button {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-top: 8px;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    button {
+      background: #2ecc71;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    #map {
+      height: 350px;
+      margin-top: 20px;
+      border-radius: 12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>🌱 AgroVision</h2>
+
+<div class="card">
+
+  <p style="font-size:14px;color:#555;">
+    📸 Capture a clear single leaf in daylight.
+  </p>
+
+  <!-- LOCATION INPUT -->
+  <input type="text" id="locationInput" placeholder="Enter location (Ballari, Goa, etc)">
+
+  <!-- IMAGE INPUT -->
+  <input type="file" id="imageInput" accept="image/*" onchange="previewImage()">
+
+  <img id="preview" style="max-width:100%;display:none;border-radius:8px;margin-top:10px;">
+
+  <button onclick="detectDisease()">Detect Disease</button>
+
+  <div id="result" style="margin-top:16px;"></div>
+
+  <hr style="margin:20px 0;">
+
+  <button onclick="loadHeatmap()">🌍 View India Disease Map</button>
+
+  <div id="map"></div>
+
+</div>
+
+<script>
+
+/* ---------------- IMAGE PREVIEW ---------------- */
+function previewImage() {
+  const file = document.getElementById("imageInput").files[0];
+  const preview = document.getElementById("preview");
+
+  if (!file) return;
+
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+}
+
+/* ---------------- DISEASE DETECTION ---------------- */
+async function detectDisease() {
+
+  const fileInput = document.getElementById("imageInput");
+  const location = document.getElementById("locationInput").value || "Unknown";
+  const resultDiv = document.getElementById("result");
+
+  if (!fileInput.files.length) {
+    alert("Upload an image first");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", fileInput.files[0]);
+
+  resultDiv.innerHTML = "⏳ Analyzing...";
+
+  try {
+
+    const response = await fetch(
+      `http://127.0.0.1:8000/predict?location=${encodeURIComponent(location)}`,
+      {
+        method: "POST",
+        body: formData
+      }
+    );
+
+    const data = await response.json();
+
+    if (data.error) {
+      resultDiv.innerHTML = "❌ " + data.error;
+      return;
+    }
+
+    resultDiv.innerHTML = `
+      <h3>🌿 Result</h3>
+      <p><b>Plant:</b> ${data.plant} (${data.plant_confidence}%)</p>
+      <p><b>Disease:</b> ${data.disease}</p>
+      <p><b>Confidence:</b> ${data.confidence}%</p>
+      <p><b>Severity:</b> ${data.severity}</p>
+      ${data.warning ? `<p style="color:red;">⚠ ${data.warning}</p>` : ""}
+      <p><b>Advice:</b><br>${data.advice}</p>
+    `;
+
+  } catch {
+    resultDiv.innerHTML = "❌ Backend not running";
+  }
+}
+
+
+/* ---------------- MAP SETUP ---------------- */
+
+let map = L.map("map").setView([22.9734, 78.6569], 5); // India center
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: "© OpenStreetMap"
+}).addTo(map);
+
+let markersLayer = L.layerGroup().addTo(map);
+
+function getColor(count) {
+  if (count >= 5) return "red";
+  if (count >= 3) return "orange";
+  return "green";
+}
+
+
+/* ---------------- LOAD HEATMAP ---------------- */
+
+async function loadHeatmap() {
+
+  markersLayer.clearLayers();
+
+  try {
+
+    const response = await fetch("http://127.0.0.1:8000/heatmap");
+    const data = await response.json();
+
+    if (Object.keys(data).length === 0) {
+      alert("No disease data available yet.");
+      return;
+    }
+
+    for (const key in data) {
+
+      const entry = data[key];
+      const count = entry.count;
+
+      L.circleMarker([entry.lat, entry.lng], {
+        radius: 15,
+        fillColor: getColor(count),
+        color: "#000",
+        weight: 1,
+        fillOpacity: 0.85
+      })
+      .bindPopup(`<b>Cases:</b> ${count}`)
+      .addTo(markersLayer);
+    }
+
+  } catch {
+    alert("Failed to load heatmap");
+  }
+}
+
+</script>
+
+</body>
+</html>

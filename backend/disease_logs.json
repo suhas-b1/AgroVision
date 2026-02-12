@@ -1,0 +1,104 @@
+[
+  {
+    "disease": "Healthy",
+    "confidence": 0.34957650303840637,
+    "location": "Unknown",
+    "timestamp": "2026-02-08T14:42:45.407298"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.34957650303840637,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T14:43:27.368009"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.34957650303840637,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T14:43:52.041477"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.34957650303840637,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T14:43:53.380657"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.34957650303840637,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T15:18:47.858420"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.34957650303840637,
+    "location": "mandya",
+    "timestamp": "2026-02-08T15:20:18.084378"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.35381338000297546,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T15:22:16.805550"
+  },
+  {
+    "disease": "Early_Blight",
+    "confidence": 0.35436490178108215,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T15:23:34.091345"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.3642188608646393,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T15:23:54.105362"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.3642188608646393,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T15:23:56.396780"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.3642188608646393,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T15:23:57.504660"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.3642188608646393,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T15:23:58.275855"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.3642188608646393,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T15:23:59.212491"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.3642188608646393,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T15:24:00.062941"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.3642188608646393,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T15:24:14.497397"
+  },
+  {
+    "disease": "Early_Blight",
+    "confidence": 0.35676443576812744,
+    "location": "mysuru",
+    "timestamp": "2026-02-08T15:24:23.906622"
+  },
+  {
+    "disease": "Healthy",
+    "confidence": 0.34957650303840637,
+    "location": "Unknown",
+    "timestamp": "2026-02-08T15:36:09.501323"
+  }
+]
