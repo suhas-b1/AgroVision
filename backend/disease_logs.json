@@ -100,5 +100,237 @@
     "confidence": 0.34957650303840637,
     "location": "Unknown",
     "timestamp": "2026-02-08T15:36:09.501323"
+  },
+  {
+    "disease": "YellowLeaf__Curl_Virus",
+    "confidence": 0.8734897971153259,
+    "location": "ballari",
+    "lat": null,
+    "lng": null,
+    "timestamp": "2026-02-12T19:31:58.868457"
+  },
+  {
+    "disease": "Early_blight",
+    "confidence": 0.9982609152793884,
+    "location": "ballari",
+    "lat": 15.3483166,
+    "lng": 76.8054883
+  },
+  {
+    "disease": "Septoria_leaf_spot",
+    "confidence": 0.9264034032821655,
+    "location": "ballari",
+    "lat": 15.3483166,
+    "lng": 76.8054883
+  },
+  {
+    "disease": "Early_blight",
+    "confidence": 0.615820586681366,
+    "location": "ballari",
+    "lat": 15.3483166,
+    "lng": 76.8054883
+  },
+  {
+    "disease": "Leaf_Mold",
+    "confidence": 0.6584028601646423,
+    "location": "ballari",
+    "lat": 15.3483166,
+    "lng": 76.8054883
+  },
+  {
+    "disease": "YellowLeaf__Curl_Virus",
+    "confidence": 0.9181023240089417,
+    "location": "mysuru",
+    "lat": 12.3051828,
+    "lng": 76.6553609
+  },
+  {
+    "disease": "YellowLeaf__Curl_Virus",
+    "confidence": 0.9181023240089417,
+    "location": "delhi",
+    "lat": 28.6138954,
+    "lng": 77.2090057
+  },
+  {
+    "disease": "YellowLeaf__Curl_Virus",
+    "confidence": 0.9181023240089417,
+    "location": "ballari",
+    "lat": 15.3483166,
+    "lng": 76.8054883
+  },
+  {
+    "disease": "Bacterial_spot",
+    "confidence": 0.989840567111969,
+    "location": "goa",
+    "lat": 15.3004543,
+    "lng": 74.0855134
+  },
+  {
+    "disease": "Early_blight",
+    "confidence": 0.9998067021369934,
+    "location": "kollam",
+    "lat": 8.8870533,
+    "lng": 76.5906696
+  },
+  {
+    "disease": "Septoria_leaf_spot",
+    "confidence": 1.0,
+    "location": "kollam",
+    "lat": 8.8870533,
+    "lng": 76.5906696
+  },
+  {
+    "disease": "Septoria_leaf_spot",
+    "confidence": 0.9999492168426514,
+    "location": "kollam",
+    "lat": 8.8870533,
+    "lng": 76.5906696
+  },
+  {
+    "disease": "Septoria_leaf_spot",
+    "confidence": 0.9999492168426514,
+    "location": "kollam",
+    "lat": 8.8870533,
+    "lng": 76.5906696
+  },
+  {
+    "disease": "Septoria_leaf_spot",
+    "confidence": 1.0,
+    "location": "kollam",
+    "lat": 8.8870533,
+    "lng": 76.5906696
+  },
+  {
+    "disease": "Septoria_leaf_spot",
+    "confidence": 0.9999492168426514,
+    "location": "delhi",
+    "lat": 28.6138954,
+    "lng": 77.2090057
+  },
+  {
+    "disease": "Septoria_leaf_spot",
+    "confidence": 1.0,
+    "location": "guntakal",
+    "lat": 15.163811,
+    "lng": 77.3761354
+  },
+  {
+    "disease": "Septoria_leaf_spot",
+    "confidence": 0.9999982118606567,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
+  },
+  {
+    "disease": "Septoria_leaf_spot",
+    "confidence": 1.0,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
+  },
+  {
+    "disease": "Septoria_leaf_spot",
+    "confidence": 1.0,
+    "location": "goa",
+    "lat": 15.3004543,
+    "lng": 74.0855134
+  },
+  {
+    "disease": "mosaic_virus",
+    "confidence": 0.9981305003166199,
+    "location": "anantapur",
+    "lat": 14.6783221,
+    "lng": 77.6065039
+  },
+  {
+    "disease": "mosaic_virus",
+    "confidence": 0.9981305003166199,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
+  },
+  {
+    "disease": "mosaic_virus",
+    "confidence": 1.0,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
+  },
+  {
+    "disease": "Late_blight",
+    "confidence": 0.9999996423721313,
+    "location": "ballari",
+    "lat": 15.3483166,
+    "lng": 76.8054883
+  },
+  {
+    "disease": "Early_blight",
+    "confidence": 0.7883140444755554,
+    "location": "ballari",
+    "lat": 15.3483166,
+    "lng": 76.8054883
+  },
+  {
+    "disease": "Early_blight",
+    "confidence": 0.7883140444755554,
+    "location": "banglore",
+    "lat": 12.9587464,
+    "lng": 77.5573456
+  },
+  {
+    "disease": "Early_blight",
+    "confidence": 0.7883140444755554,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
+  },
+  {
+    "disease": "Late_blight",
+    "confidence": 0.9351711869239807,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
+  },
+  {
+    "disease": "Early_blight",
+    "confidence": 0.7883140444755554,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
+  },
+  {
+    "disease": "Early_blight",
+    "confidence": 0.7883140444755554,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
+  },
+  {
+    "disease": "Early_blight",
+    "confidence": 0.7883140444755554,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
+  },
+  {
+    "disease": "Bacterial_spot",
+    "confidence": 0.9997876286506653,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
+  },
+  {
+    "disease": "Bacterial_spot",
+    "confidence": 0.9670683145523071,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
+  },
+  {
+    "disease": "Bacterial_spot",
+    "confidence": 0.9732900857925415,
+    "location": "unknown",
+    "lat": 26.492533,
+    "lng": 92.3308789
   }
 ]

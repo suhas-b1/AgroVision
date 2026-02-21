@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AgroVision</title>
+
+  <link rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e8f5f2;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 16px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    }
+
+    input, button {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    button {
+      background: #2ecc71;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    #map {
+      height: 350px;
+      margin-top: 20px;
+      border-radius: 12px;
+    }
+
+    video {
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+
+    .chatBox {
+      text-align:left;
+      margin-top:10px;
+      max-height:150px;
+      overflow:auto;
+      font-size:14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>🌱 AgroVision</h2>
+
+<div class="card">
+
+  <input type="text" id="locationInput"
+         placeholder="Enter location (Ballari, Goa, etc)">
+
+  <input type="file" id="imageInput"
+         accept="image/*"
+         onchange="previewImage()">
+
+  <img id="preview"
+       style="max-width:100%;display:none;border-radius:10px;margin-top:10px;">
+
+  <button onclick="detectDisease()">Detect Disease</button>
+
+  <div id="result" style="margin-top:16px;"></div>
+
+  <hr>
+
+  <h3>📸 Live Camera</h3>
+  <video id="video" width="100%" autoplay playsinline></video>
+  <button onclick="captureImage()">Capture & Analyze</button>
+  <canvas id="canvas" style="display:none;"></canvas>
+
+  <hr>
+
+  <h3>🎤 Voice Assistant</h3>
+  <button onclick="startAssistant()">Start Talking</button>
+  <button onclick="stopAssistant()">Stop</button>
+
+  <div id="assistantStatus">Idle</div>
+  <div id="assistantChat" class="chatBox"></div>
+
+  <hr>
+
+  <button onclick="loadHeatmap()">🌍 View India Disease Map</button>
+  <div id="map"></div>
+
+</div>
+
+<script>
+
+/* ================= SPEAK ================= */
+function speak(text, lang = navigator.language) {
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(text);
+    speech.lang = lang;
+    speech.rate = 1;
+    speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
+}
+
+
+/* ================= IMAGE PREVIEW ================= */
+function previewImage() {
+  const file = document.getElementById("imageInput").files[0];
+  const preview = document.getElementById("preview");
+  if (!file) return;
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+}
+
+
+/* ================= DISEASE DETECTION ================= */
+async function detectDisease() {
+
+  const fileInput = document.getElementById("imageInput");
+  const location = document.getElementById("locationInput").value || "Unknown";
+  const resultDiv = document.getElementById("result");
+
+  if (!fileInput.files.length) {
+    alert("Upload an image first");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", fileInput.files[0]);
+
+  resultDiv.innerHTML = "⏳ Analyzing...";
+
+  try {
+
+    const response = await fetch(
+      `http://127.0.0.1:8000/predict?location=${encodeURIComponent(location)}`,
+      { method: "POST", body: formData }
+    );
+
+    const data = await response.json();
+
+    if (!data || data.error) {
+      resultDiv.innerHTML = "❌ Backend error";
+      return;
+    }
+
+    resultDiv.innerHTML = `
+      <h3>🌿 Result</h3>
+      <p><b>Plant:</b> ${data.plant || "Not detected"}</p>
+      <p><b>Disease:</b> ${data.disease || "Not detected"}</p>
+      <p><b>Confidence:</b> ${data.confidence || 0}%</p>
+      <p><b>Severity:</b> ${data.severity || "-"}</p>
+      <p><b>Advice:</b> ${data.advice || "No advice"}</p>
+      <hr>
+      <p><b>🤖 AI Explanation:</b><br>${data.ai_explanation || "No explanation"}</p>
+    `;
+
+    if (data.ai_explanation) {
+      speak(data.ai_explanation);
+    }
+
+  } catch (err) {
+    resultDiv.innerHTML = "❌ Cannot connect to backend";
+  }
+}
+
+
+/* ================= CAMERA ================= */
+const video = document.getElementById("video");
+
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => video.srcObject = stream)
+.catch(() => alert("Camera not available"));
+
+function captureImage() {
+
+  const canvas = document.getElementById("canvas");
+  const context = canvas.getContext("2d");
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  context.drawImage(video, 0, 0);
+
+  canvas.toBlob(async function(blob) {
+
+    const formData = new FormData();
+    formData.append("file", blob, "capture.png");
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/ai-vision",
+      { method: "POST", body: formData }
+    );
+
+    const data = await response.json();
+
+    document.getElementById("assistantChat").innerHTML +=
+      `<p><b>Vision:</b> ${data.analysis}</p>`;
+
+    speak(data.analysis);
+
+  }, "image/png");
+}
+
+
+/* ================= VOICE ASSISTANT FIXED ================= */
+
+let recognition;
+let isListening = false;
+
+if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();
+} else {
+    alert("Speech recognition not supported in this browser");
+}
+
+recognition.continuous = false;   // IMPORTANT: not continuous
+recognition.interimResults = false;
+recognition.lang = navigator.language;
+
+function startAssistant() {
+
+    if (isListening) return;
+
+    isListening = true;
+    document.getElementById("assistantStatus").innerText = "🎙 Listening...";
+
+    recognition.start();
+}
+
+function stopAssistant() {
+
+    window.speechSynthesis.cancel();   // stop speaking
+    recognition.stop();
+    isListening = false;
+
+    document.getElementById("assistantStatus").innerText = "🛑 Stopped";
+}
+
+recognition.onresult = async function(event) {
+
+    const transcript = event.results[0][0].transcript;
+
+    document.getElementById("assistantChat").innerHTML +=
+        `<p><b>You:</b> ${transcript}</p>`;
+
+    try {
+
+        const res = await fetch("http://127.0.0.1:8000/ai-chat", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({message: transcript})
+        });
+
+        const data = await res.json();
+
+        document.getElementById("assistantChat").innerHTML +=
+            `<p><b>AI:</b> ${data.reply}</p>`;
+
+        speak(data.reply);
+
+    } catch (err) {
+        document.getElementById("assistantChat").innerHTML +=
+            `<p><b>AI:</b> Backend not responding.</p>`;
+    }
+
+    isListening = false;
+};
+
+
+
+/* ================= MAP ================= */
+
+let map = L.map("map").setView([22.9734, 78.6569], 5);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png")
+.addTo(map);
+
+let markersLayer = L.layerGroup().addTo(map);
+
+async function loadHeatmap() {
+
+  markersLayer.clearLayers();
+
+  const response = await fetch("http://127.0.0.1:8000/heatmap");
+  const data = await response.json();
+
+  for (const key in data) {
+
+    const entry = data[key];
+
+    if (!entry.lat || !entry.lng) continue;
+
+    L.circleMarker([entry.lat, entry.lng], {
+      radius: 15,
+      fillColor: entry.count > 3 ? "red" : "green",
+      color: "#000",
+      weight: 1,
+      fillOpacity: 0.8
+    }).addTo(markersLayer);
+  }
+}
+
+</script>
+
+
+</body>
+</html>

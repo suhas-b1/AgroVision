@@ -1,96 +1,83 @@
-from collections import defaultdict
-from geopy.geocoders import Nominatim
-from PIL import Image
-from PIL.ExifTags import TAGS, GPSTAGS
+"""
+AgroVision AI — Disease Alerts & Heatmap
+Logs disease detections to database and provides heatmap data.
+"""
 
+from collections import defaultdict
+from typing import Optional
+
+from geopy.geocoders import Nominatim
+from sqlalchemy.orm import Session
+
+from .models import DiseaseLog
+
+# ─── Geocoder ─────────────────────────────────────────────
 geolocator = Nominatim(user_agent="agrovision")
 
-_disease_logs = []
 
-
-# ==========================
-# 🌍 GET LAT/LNG FROM NAME
-# ==========================
-def get_coordinates_from_name(location):
+def get_coordinates_from_name(location: str):
+    """Convert location name to lat/lng coordinates."""
     try:
-        geo = geolocator.geocode(location)
+        geo = geolocator.geocode(f"{location}, India")
         if geo:
             return geo.latitude, geo.longitude
-    except:
+    except Exception:
         pass
     return None, None
 
 
-# ==========================
-# 📸 GET GPS FROM IMAGE
-# ==========================
-def get_coordinates_from_image(image_path):
-    try:
-        image = Image.open(image_path)
-        exif = image._getexif()
-
-        if not exif:
-            return None, None
-
-        gps_info = {}
-        for key, value in exif.items():
-            tag = TAGS.get(key)
-            if tag == "GPSInfo":
-                for t in value:
-                    gps_tag = GPSTAGS.get(t)
-                    gps_info[gps_tag] = value[t]
-
-        if "GPSLatitude" in gps_info and "GPSLongitude" in gps_info:
-            lat = gps_info["GPSLatitude"][0][0]
-            lng = gps_info["GPSLongitude"][0][0]
-            return lat, lng
-
-    except:
-        pass
-
-    return None, None
-
-
-# ==========================
-# 🧾 LOG DISEASE
-# ==========================
-def log_disease(disease, confidence, location, image_path):
+def log_disease(
+    db: Session,
+    plant: str,
+    disease: str,
+    confidence: float,
+    severity: str,
+    location: str,
+    user_id: Optional[int] = None,
+):
+    """Log a disease detection to the database."""
 
     if disease.lower() == "healthy":
         return
 
-    lat, lng = None, None
+    lat, lng = get_coordinates_from_name(location)
 
-    # 1️⃣ If location typed
-    if location and location != "Unknown":
-        lat, lng = get_coordinates_from_name(location)
+    if lat is None:
+        print(f"⚠ Could not find location: {location}")
 
-    # 2️⃣ If no location → try image GPS
-    if not lat:
-        lat, lng = get_coordinates_from_image(image_path)
+    log = DiseaseLog(
+        user_id=user_id,
+        plant=plant,
+        disease=disease,
+        confidence=confidence,
+        severity=severity,
+        location=location.lower() if location else "unknown",
+        lat=lat,
+        lng=lng,
+    )
+    db.add(log)
+    db.commit()
 
-    if not lat:
-        return  # If still no location, skip logging
-
-    _disease_logs.append({
-        "disease": disease,
-        "lat": lat,
-        "lng": lng
-    })
+    print(f"✅ Logged: {location} ({lat}, {lng})")
 
 
-# ==========================
-# 🗺️ HEATMAP DATA
-# ==========================
-def get_heatmap_data():
+def get_heatmap_data(db: Session) -> dict:
+    """Get aggregated heatmap data from database."""
 
-    heatmap = defaultdict(lambda: {"count": 0, "lat": 0, "lng": 0})
+    logs = db.query(DiseaseLog).filter(
+        DiseaseLog.lat.isnot(None),
+        DiseaseLog.lng.isnot(None),
+    ).all()
 
-    for entry in _disease_logs:
-        key = f"{entry['lat']},{entry['lng']}"
+    heatmap = defaultdict(lambda: {"count": 0, "lat": None, "lng": None})
 
+    for entry in logs:
+        if entry.disease.lower() == "healthy":
+            continue
+
+        key = entry.location or "unknown"
         heatmap[key]["count"] += 1
-        heatmap[key]["lat"] = entry["lat"]
-        heatmap[key]["lng"] = entry["lng"]
+        heatmap[key]["lat"] = entry.lat
+        heatmap[key]["lng"] = entry.lng
 
-    return heatmap
+    return dict(heatmap)
