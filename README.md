@@ -106,3 +106,14 @@ This project is for educational and demonstrative purposes. Feel free to fork an
 
 <img width="957" height="963" alt="image" src="https://github.com/user-attachments/assets/0dae5bec-506c-4477-8f38-8e3d99ce17f7" />
 
+<img width="1919" height="967" alt="Screenshot 2026-02-21 163817" src="https://github.com/user-attachments/assets/58a2ec28-d8be-4c40-a372-c0ed5b3fe862" />
+
+<img width="1919" height="972" alt="Screenshot 2026-02-21 165446" src="https://github.com/user-attachments/assets/ba414e7b-51d2-4bca-be25-3cb6759ef1e2" />
+
+<img width="1919" height="963" alt="Screenshot 2026-02-21 165659" src="https://github.com/user-attachments/assets/6c8a29f5-bd46-4cef-b6e3-39c6dc39161e" />
+
+<img width="1919" height="968" alt="Screenshot 2026-02-21 165948" src="https://github.com/user-attachments/assets/b04250b0-550a-45d7-8237-76fad798753c" />
+
+<img width="1918" height="958" alt="Screenshot 2026-02-21 170152" src="https://github.com/user-attachments/assets/fc5ef11c-69f8-4533-8861-fb9f212db9e1" />
+
+<img width="1919" height="965" alt="Screenshot 2026-02-21 170218" src="https://github.com/user-attachments/assets/8ecff33a-01cd-4278-81c7-640a3946f13a" />
