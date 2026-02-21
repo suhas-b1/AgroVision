@@ -103,3 +103,6 @@ The application will be accessible at:
 
 ## 📄 License
 This project is for educational and demonstrative purposes. Feel free to fork and enhance!
+
+<img width="957" height="963" alt="image" src="https://github.com/user-attachments/assets/0dae5bec-506c-4477-8f38-8e3d99ce17f7" />
+
